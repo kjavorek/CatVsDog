@@ -46,20 +46,6 @@
   <h3>CAT VS. DOG</h3>
   <p>It is easy for humans to determine whether images contain either a cat or a dog while computer find it a bit more difficult.</p>
   <br>
-  <div class="row">
-    <div class="col-sm-4">
-      <p class="text-center"><strong>Human</strong></p><br>
-      <img src="images/man.png" class="img-rounded person" alt="Human" width="255" height="255">
-    </div>
-    <div class="col-sm-4">
-      <p class="text-center"><strong>Cat vs. Dog</strong></p><br>
-      <img src="images/cat_dog.png" class="img-rounded person" alt="Cat vs. Dog" width="255" height="255">
-    </div>
-    <div class="col-sm-4">
-      <p class="text-center"><strong>Computer</strong></p><br>
-      <img src="images/computer.png" class="img-rounded person" alt="Computer" width="255" height="255">
-    </div>
-  </div>
 </div>
 
 <!-- Container Model -->
@@ -76,12 +62,14 @@
     <h3 class="text-center">TEST MODEL</h3>
     <p class="text-center">
         <form  method="post" enctype="multipart/form-data">
-		<label id="inputPhoto" for="input_photo"> UPLOAD </label>
 		<input name="fileToUpload" type="file" onchange="previewFile()" style="display:none" id="input_photo">
-        <button onclick=submit() type="submit" name="submited">Test</button>
         </form>
         <br>
-		your image and test the model!
+		<div id="upload_and_test">
+			<label id="inputPhoto" for="input_photo">UPLOAD</label>  
+			your image and 
+			<button onclick=submit() type="submit" name="submited" id="btnTest">TEST</button>the model!
+		</div>
 	</p>
 	<div class="row">
 	<div class="col-md-8">
@@ -141,7 +129,7 @@ function previewFile(){
 </script>
 <?php
 if(isset($_POST["submited"])){
-$target_dir = "../catvsdog/uploads/";
+$target_dir = "/uploads/";
 $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 $uploadOk = 1;
 $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
@@ -182,15 +170,7 @@ if ($uploadOk == 0) {
         $arg=basename($_FILES["fileToUpload"]["name"]);
         echo $arg;
         $results = shell_exec('py catvsdog.py ' . $arg);
-        /*$cutresults= substr($results, 1, -2);
-        $arrayresults=explode( '  ', $cutresults );
-        $arr=array_filter($arrayresults, function($value) { return $value !== ''; });
-        //$arr=array_map('floatval', $arr);
-        array_unshift($arr, "");
-        var_dump($arr);
-        include 'conn.php';*/
         $results= substr($results, 1, -2);
-        //var_dump($results);
         if($results=="0"){
             ?>  
             <h1>Pas je</h1>
