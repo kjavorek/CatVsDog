@@ -62,14 +62,14 @@
     <h3 class="text-center">TEST MODEL</h3>
     <p class="text-center">
         <form  method="post" enctype="multipart/form-data">
-		<input name="fileToUpload" type="file" onchange="previewFile()" style="display:none" id="input_photo">
-        </form>
-        <br>
-		<div id="upload_and_test">
-			<label id="inputPhoto" for="input_photo">UPLOAD</label>  
-			your image and 
-			<button onclick=submit() type="submit" name="submited" id="btnTest">TEST</button>the model!
-		</div>
+			<input name="fileToUpload" type="file" onchange="previewFile()" style="display:none" id="input_photo">
+			<br>
+			<div id="upload_and_test">
+				<label id="inputPhoto" for="input_photo">UPLOAD</label>  
+				your image and 
+				<button onclick=submit() type="submit" name="submited" id="btnTest">TEST</button>the model!
+			</div>
+		</form>
 	</p>
 	<div class="row">
 	<div class="col-md-8">
