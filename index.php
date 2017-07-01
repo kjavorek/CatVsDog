@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <title>Cat or Dog</title>
@@ -51,34 +50,33 @@
 <!-- Container Model -->
 <div id="model" class="bg-1">
 <div class="container">
-  <h3 class="text-center">Machine Learning</h3>
+  <h3 class="text-center">Machine Learning Model</h3>
   <p class="text-center"><em>Microsoft Azure</em></p>
   <br>
   </div>
 </div>
-
 <!-- Container Test -->
 <div id="test" class="container">
     <h3 class="text-center">TEST MODEL</h3>
     <p class="text-center">
-        <form  method="post" enctype="multipart/form-data">
+        <form  id="uploadImage" action="" method="post" enctype="multipart/form-data">
 			<input name="fileToUpload" type="file" onchange="previewFile()" style="display:none" id="input_photo">
 			<br>
 			<div id="upload_and_test">
 				<label id="inputPhoto" for="input_photo">UPLOAD</label>  
 				your image and 
-				<button onclick=submit() type="submit" name="submited" id="btnTest">TEST</button>the model!
+				<button type="submit" class="button" name="submited" value="insert" id="btnTest">TEST</button>the model!
 			</div>
 		</form>
 	</p>
 	<div class="row">
-	<div class="col-md-8">
-		<img id="petImage" src=""  />
-    </div>
-    <div class="col-md-4">
-		<div id="result"></div>
-    </div>
-  </div>
+		<div class="col-md-8">
+			<img id="petImage" src=""  />
+		</div>
+		<div class="col-md-4">
+			<div id="result"></div>	
+		</div>
+	</div>
 </div>
 
 <!-- Footer -->
@@ -91,6 +89,29 @@
 
 
 <script>
+$(document).ready(function(e){
+	$("#uploadImage").on('submit',function(e){
+		e.preventDefault();
+		$.ajax({
+			url: "conn.php", 
+			type: "POST",             
+			data: new FormData(this), 
+			contentType: false,       
+			cache: false,             
+			processData:false,        
+			success: function(response)   
+			{
+				alert(response);
+				if((response + '').length < 4)
+					$("#result").html("There is a <b style='color:#000'>  "+ response +"  </b> on the picture.");
+				else {
+					$("#result").html("");
+					alert(response);
+				}
+			}
+		});
+})});
+
 $(document).ready(function(){
   $(".navbar a, footer a[href='#myPage']").on('click', function(event) {
     if (this.hash !== "") {
@@ -103,91 +124,24 @@ $(document).ready(function(){
       });
 	}
   });
-});
-
+ });
+ 
 function previewFile(){
-   var result  = document.getElementById('result'); 
    var preview = document.getElementById('petImage');
    var file    = document.querySelector('input[type=file]').files[0]; 
    var reader  = new FileReader();
-
    reader.onloadend = function () {
 	   preview.src = reader.result;
    }
-
    if (file) {
 	   reader.readAsDataURL(file); 
 	   preview.style.height = '300px';
-	   $('#result').html("There is a <b style='color:#000'>  DOG  </b> on the picture.");
    } else {
 	   preview.src = "";
-	   $('#result').html("");
    }
    
 }
-
 </script>
-<?php
-if(isset($_POST["submited"])){
-$target_dir = "/uploads/";
-$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-$uploadOk = 1;
-$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
-// Check if image file is a actual image or fake image
-if(isset($_POST["submited"])) {
-    $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
-    if($check !== false) {
-        echo "File is an image - " . $check["mime"] . ".";
-        $uploadOk = 1;
-    } else {
-        echo "File is not an image.";
-        $uploadOk = 0;
-    }
-}
-// Check if file already exists
-if (file_exists($target_file)) {
-    echo "Sorry, file already exists.";
-    $uploadOk = 0;
-}
-// Check file size
-if ($_FILES["fileToUpload"]["size"] > 500000) {
-    echo "Sorry, your file is too large.";
-    $uploadOk = 0;
-}
-// Allow certain file formats
-if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-&& $imageFileType != "gif" ) {
-    echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-    $uploadOk = 0;
-}
-// Check if $uploadOk is set to 0 by an error
-if ($uploadOk == 0) {
-    echo "Sorry, your file was not uploaded.";
-// if everything is ok, try to upload file
-} else {
-    if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-        echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
-        $arg=basename($_FILES["fileToUpload"]["name"]);
-        echo $arg;
-        $results = shell_exec('py catvsdog.py ' . $arg);
-        $results= substr($results, 1, -2);
-        if($results=="0"){
-            ?>  
-            <h1>Pas je</h1>
-            <?php
-        }
-        else{
-             ?>  
-            <h1>Mačka je</h1>
-            <?php
-        }
-    } else {
-        echo "Sorry, there was an error uploading your file.";
-    }
-}
-}
-
-?>
 </body>
 </html>
 
